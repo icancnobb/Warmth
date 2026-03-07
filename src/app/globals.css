@@ -5,39 +5,61 @@
 }
 
 body {
+  /* Apple Design: Typography - 系统字体 */
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
   background: #F5F5F7;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Apple Design: Smooth Animations */
-@keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+/* Apple Design: 动效 - 平滑过渡 */
+* {
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Apple Design: Typography Scale */
-h1, h2, h3 { color: #1D1D1F; }
-p, span, div { color: #86868B; }
-
-/* Apple Design: Interactive Elements */
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
+/* Apple Design: 动效 - 按钮点击 */
 button:active {
   transform: scale(0.97);
   transition: transform 0.1s ease;
 }
 
-/* Apple Design: Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #D1D1D6; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #AEAEB2; }
+/* Apple Design: Typography - 输入框 */
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+/* Apple Design: 滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+/* Apple Design: 颜色系统 */
+:root {
+  --apple-gray-1: #F5F5F7;
+  --apple-gray-2: #E5E7EB;
+  --apple-gray-3: #D1D5DB;
+  --apple-gray-4: #9CA3AF;
+  --apple-gray-5: #6B7280;
+  --apple-gray-6: #4B5563;
+  --apple-gray-7: #374151;
+  --apple-gray-8: #1D1D1F;
+  --apple-gray-9: #86868B;
+  
+  --apple-blue: #007AFF;
+  --apple-pink: #FF2D55;
+  --apple-green: #34C759;
+  --apple-orange: #FF9500;
+  --apple-purple: #AF52DE;
+}

@@ -15,26 +15,26 @@ export default function Navigation() {
 
   return (
     <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-      {/* 温暖浮岛导航 */}
-      <div className="flex items-center px-1 py-1.5 bg-white/90 backdrop-blur-xl rounded-[28px] shadow-xl shadow-gray-200/50 border border-white/60">
+      {/* Apple Design: 材料 - 浮岛导航 */}
+      <div className="flex items-center px-1 py-1.5 bg-white/90 backdrop-blur-xl rounded-[24px] shadow-lg border border-white/60">
         {navItems.map(item => (
           <Link
             key={item.href}
             href={item.href}
             className={`
-              relative flex flex-col items-center justify-center w-16 h-12 rounded-2xl mx-0.5
-              transition-all duration-300
+              relative flex flex-col items-center justify-center w-14 h-11 rounded-[16px] mx-0.5
+              transition-all duration-200
               ${pathname === item.href 
-                ? 'text-rose-500' 
-                : 'text-gray-400 hover:text-gray-600'
+                ? 'text-[#007AFF]' 
+                : 'text-[#86868B] hover:text-[#1D1D1F]'
               }
             `}
           >
             {pathname === item.href && (
-              <div className="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-50 rounded-2xl shadow-sm" />
+              <div className="absolute inset-0 bg-[#F5F5F7] rounded-[16px] -z-10" />
             )}
-            <span className="text-xl relative z-10">{item.icon}</span>
-            <span className={`text-[10px] font-medium mt-0.5 relative z-10 ${pathname === item.href ? 'text-rose-500' : ''}`}>
+            <span className="text-lg leading-none">{item.icon}</span>
+            <span className={`text-[10px] font-medium mt-0.5 ${pathname === item.href ? 'text-[#007AFF]' : ''}`}>
               {item.label}
             </span>
           </Link>
