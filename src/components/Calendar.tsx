@@ -1,16 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { db } from '@/lib/db'
 import { DiaryEntry, DEFAULT_MOODS, MOOD_EMOJIS } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
-
-// Apple Design: 空间感 + 深度 + 材料
-const SHADOWS = {
-  sm: '0 1px 3px rgba(0,0,0,0.08)',
-  md: '0 4px 12px rgba(0,0,0,0.1)',
-  lg: '0 12px 28px rgba(0,0,0,0.12)',
-}
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -23,21 +16,22 @@ export default function Calendar() {
   const [newCustomMood, setNewCustomMood] = useState('')
   const [mounted, setMounted] = useState(false)
 
-  useEffect(() => { setMounted(true); loadEntries(); loadCustomMoods() }, [])
-
-  const loadEntries = async () => {
+  const loadEntries = useCallback(async () => {
     const year = currentDate.getFullYear()
     const month = currentDate.getMonth()
     const startDate = new Date(year, month, 1).toISOString().split('T')[0]
     const endDate = new Date(year, month + 1, 0).toISOString().split('T')[0]
     const results = await db.diary.where('date').between(startDate, endDate + '\ufff0').toArray()
     setEntries(results)
-  }
+  }, [currentDate])
 
-  const loadCustomMoods = async () => {
+  const loadCustomMoods = useCallback(async () => {
     const settings = await db.profile.get('settings')
     if (settings?.customMoods) setCustomMoods(settings.customMoods)
-  }
+  }, [])
+
+  useEffect(() => { setMounted(true); loadCustomMoods() }, [loadCustomMoods])
+  useEffect(() => { loadEntries() }, [loadEntries])
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear()

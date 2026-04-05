@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { db } from '@/lib/db'
 import { KnowledgeItem } from '@/types'
 import { v4 as uuidv4 } from 'uuid'
+import { parsePdfFile, isValidFileType } from '@/lib/pdf'
 
 interface Message {
   id: string
@@ -68,14 +69,43 @@ export default function ChatInterface() {
     setTitle(''); setContent(''); setShowAddForm(false); loadKnowledge()
   }
 
+  // PDF parsing with pdf-parse library
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    let text = ''
-    if (file.name.endsWith('.txt') || file.name.endsWith('.md')) { text = await file.text() }
-    else if (file.name.endsWith('.pdf')) { alert('PDF需要转换格式'); return }
-    await db.knowledge.add({ id: uuidv4(), title: file.name, content: text, source: 'file', fileName: file.name, createdAt: Date.now() })
-    loadKnowledge()
+    
+    if (!isValidFileType(file)) {
+      alert('不支持的文件格式，请上传 .txt、.md 或 .pdf 文件')
+      return
+    }
+    
+    try {
+      let text = ''
+      if (file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+        text = await file.text()
+      } else if (file.name.endsWith('.pdf')) {
+        text = await parsePdfFile(file)
+      }
+      
+      if (!text.trim()) {
+        alert('无法从文件中提取文本内容')
+        return
+      }
+      
+      await db.knowledge.add({ 
+        id: uuidv4(), 
+        title: file.name, 
+        content: text, 
+        source: 'file', 
+        fileName: file.name, 
+        createdAt: Date.now() 
+      })
+      loadKnowledge()
+      alert('文件上传成功！')
+    } catch (error) {
+      console.error('File upload error:', error)
+      alert('文件处理失败，请重试')
+    }
   }
 
   const handleDelete = async (id: string) => { await db.knowledge.delete(id); loadKnowledge() }
@@ -139,9 +169,15 @@ export default function ChatInterface() {
         <div className="bg-white/90 backdrop-blur-xl border-b border-gray-100">
           <div className="p-4">
             {!showAddForm ? (
-              <button onClick={() => setShowAddForm(true)} className="w-full px-4 py-2.5 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-xl hover:shadow-lg hover:shadow-rose-200 transition-all text-sm font-medium">
-                + 添加知识
-              </button>
+              <div className="flex gap-2">
+                <button onClick={() => setShowAddForm(true)} className="flex-1 px-4 py-2.5 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-xl hover:shadow-lg hover:shadow-rose-200 transition-all text-sm font-medium">
+                  + 手动添加
+                </button>
+                <label className="flex-1 px-4 py-2.5 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl hover:shadow-lg hover:shadow-purple-200 transition-all text-sm font-medium text-center cursor-pointer">
+                  <input type="file" accept=".txt,.md,.pdf" onChange={handleFileUpload} className="hidden" />
+                  + 文件上传
+                </label>
+              </div>
             ) : (
               <div className="space-y-3">
                 <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="标题" className="w-full px-4 py-2.5 bg-gray-50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-300" />

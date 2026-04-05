@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Navigation from '@/components/Navigation'
+import Providers from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,8 +27,9 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body className={`${inter.className} antialiased`}>
-        <Navigation />
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   )
