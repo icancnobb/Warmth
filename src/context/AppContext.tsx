@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import { db } from '@/lib/db';
-import { DiaryEntry, KnowledgeItem, Artwork, UserProfile } from '@/types';
+import { DiaryEntry, KnowledgeItem, Artwork, UserProfile, ChatMessage } from '@/types';
 
 // State interface
 interface AppState {
@@ -8,20 +8,24 @@ interface AppState {
   knowledge: KnowledgeItem[];
   artworks: Artwork[];
   profile: UserProfile | null;
+  chatMessages: ChatMessage[];
   isLoading: boolean;
 }
 
 // Action types
 type AppAction =
   | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'LOAD_ALL_DATA'; payload: { entries: DiaryEntry[]; knowledge: KnowledgeItem[]; artworks: Artwork[]; profile: UserProfile | null } }
+  | { type: 'LOAD_ALL_DATA'; payload: { entries: DiaryEntry[]; knowledge: KnowledgeItem[]; artworks: Artwork[]; profile: UserProfile | null; chatMessages: ChatMessage[] } }
   | { type: 'ADD_ENTRY'; payload: DiaryEntry }
   | { type: 'UPDATE_ENTRY'; payload: { id: string; updates: Partial<DiaryEntry> } }
   | { type: 'ADD_KNOWLEDGE'; payload: KnowledgeItem }
+  | { type: 'UPDATE_KNOWLEDGE'; payload: KnowledgeItem }
   | { type: 'DELETE_KNOWLEDGE'; payload: string }
   | { type: 'ADD_ARTWORK'; payload: Artwork }
   | { type: 'DELETE_ARTWORK'; payload: string }
-  | { type: 'UPDATE_PROFILE'; payload: UserProfile };
+  | { type: 'UPDATE_PROFILE'; payload: UserProfile }
+  | { type: 'ADD_CHAT_MESSAGE'; payload: ChatMessage }
+  | { type: 'CLEAR_CHAT_MESSAGES' };
 
 // Initial state
 const initialState: AppState = {
@@ -29,6 +33,7 @@ const initialState: AppState = {
   knowledge: [],
   artworks: [],
   profile: null,
+  chatMessages: [],
   isLoading: true,
 };
 
@@ -44,6 +49,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
         knowledge: action.payload.knowledge,
         artworks: action.payload.artworks,
         profile: action.payload.profile,
+        chatMessages: action.payload.chatMessages,
         isLoading: false,
       };
     case 'ADD_ENTRY':
@@ -57,6 +63,8 @@ function appReducer(state: AppState, action: AppAction): AppState {
       };
     case 'ADD_KNOWLEDGE':
       return { ...state, knowledge: [...state.knowledge, action.payload] };
+    case 'UPDATE_KNOWLEDGE':
+      return { ...state, knowledge: state.knowledge.map(k => k.id === action.payload.id ? action.payload : k) };
     case 'DELETE_KNOWLEDGE':
       return {
         ...state,
@@ -71,6 +79,10 @@ function appReducer(state: AppState, action: AppAction): AppState {
       };
     case 'UPDATE_PROFILE':
       return { ...state, profile: action.payload };
+    case 'ADD_CHAT_MESSAGE':
+      return { ...state, chatMessages: [...state.chatMessages, action.payload] };
+    case 'CLEAR_CHAT_MESSAGES':
+      return { ...state, chatMessages: [] };
     default:
       return state;
   }
@@ -88,6 +100,9 @@ interface AppContextType {
   addArtwork: (artwork: Artwork) => Promise<void>;
   deleteArtwork: (id: string) => Promise<void>;
   updateProfile: (profile: UserProfile) => Promise<void>;
+  addChatMessage: (msg: ChatMessage) => Promise<void>;
+  clearChatMessages: () => Promise<void>;
+  updateKnowledge: (item: KnowledgeItem) => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -104,15 +119,16 @@ export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => {
     async function loadData() {
       try {
-        const [entries, knowledge, artworks, profile] = await Promise.all([
+        const [entries, knowledge, artworks, profile, chatMessages] = await Promise.all([
           db.diary.toArray(),
           db.knowledge.toArray(),
           db.artworks.toArray(),
           db.profile.get('user'),
+          db.chatMessages.toArray(),
         ]);
         dispatch({
           type: 'LOAD_ALL_DATA',
-          payload: { entries, knowledge, artworks, profile: profile || null },
+          payload: { entries, knowledge, artworks, profile: profile || null, chatMessages },
         });
       } catch (error) {
         console.error('Failed to load data:', error);
@@ -158,16 +174,34 @@ export function AppProvider({ children }: AppProviderProps) {
     dispatch({ type: 'UPDATE_PROFILE', payload: profile });
   };
 
+  const addChatMessage = async (msg: ChatMessage) => {
+    await db.chatMessages.add(msg);
+    dispatch({ type: 'ADD_CHAT_MESSAGE', payload: msg });
+  };
+
+  const clearChatMessages = async () => {
+    await db.chatMessages.clear();
+    dispatch({ type: 'CLEAR_CHAT_MESSAGES' });
+  };
+
+  const updateKnowledge = async (item: KnowledgeItem) => {
+    await db.knowledge.put(item);
+    dispatch({ type: 'UPDATE_KNOWLEDGE', payload: item });
+  };
+
   const value: AppContextType = {
     state,
     dispatch,
     addEntry,
     updateEntry,
     addKnowledge,
+    updateKnowledge,
     deleteKnowledge,
     addArtwork,
     deleteArtwork,
     updateProfile,
+    addChatMessage,
+    clearChatMessages,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

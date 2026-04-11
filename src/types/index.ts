@@ -32,6 +32,30 @@ export interface UserProfile {
   customMoods?: string[];
 }
 
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  createdAt: number;
+}
+
+export interface AppSettings {
+  id: string;
+  darkMode: boolean;
+  fontSize: 'small' | 'medium' | 'large';
+}
+
+export interface ExportData {
+  version: string;
+  exportedAt: string;
+  diary: DiaryEntry[];
+  knowledge: KnowledgeItem[];
+  artworks: Artwork[];
+  profile: UserProfile | null;
+  chatMessages: ChatMessage[];
+  settings: AppSettings | null;
+}
+
 export const DEFAULT_MOODS = ['开心', '平静', '一般', '难过', '糟糕'];
 
 export const MOOD_COLORS: Record<string, string> = {
