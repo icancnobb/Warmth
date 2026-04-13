@@ -1,160 +1,59 @@
-# Product-Spec.md - 心情日记个人助手
+﻿# Product-Spec.md - Warmth v2
 
-## 1. 项目概述
+## 1. Product Goal
 
-**项目名称**: 心情日记 (MoodDiary)  
-**项目类型**: 个人情感助手 Web 应用  
-**核心功能**: 日历打卡心情记录 + 本地知识库AI聊天 + 自由绘画板 + 个人资料管理  
-**目标用户**: 希望记录日常情绪、通过AI自我疗愈、喜欢自由涂鸦的用户
+Warmth v2 is a local-first emotional companion focused on four core loops:
 
----
+1. Daily mood journaling
+2. Reflective chat support
+3. Free-form drawing for emotional release
+4. Personal baseline profile storage
 
-## 2. 技术栈
+## 2. Design Principles
 
-- **框架**: Next.js 14 (App Router)
-- **样式**: Tailwind CSS
-- **状态管理**: React Context + useReducer
-- **本地存储**: IndexedDB (Dexie.js) + LocalStorage
-- **AI**: 基于本地TF-IDF向量检索的问答系统
-- **绘画**: HTML5 Canvas + Fabric.js
-- **PDF解析**: pdf-parse
+- Keep routes thin and business logic modular.
+- Persist data in predictable namespaced keys.
+- Keep user workflows simple and fast.
+- Preserve privacy through local-first behavior.
 
----
+## 3. Functional Scope
 
-## 3. 功能规格
+### 3.1 Home
 
-### 3.1 日历打卡 (首页)
+- Show quick metrics for journal entries, chat turns, and saved artworks.
+- Provide direct entry points into each module.
 
-**页面布局**:
-- 顶部：月份切换 + 回到今天按钮
-- 中间：月历视图（7列x6行）
-- 底部：当天打卡弹窗
+### 3.2 Journal
 
-**功能**:
-- 点击日期弹出打卡弹窗
-- 心情选择：开心、平静、一般、难过、糟糕 + 自定义（最多3个自定义）
-- 状态备注：最多200字
-- 显示：当天心情图标 + 颜色
-- 月历格子显示当天心情颜色
+- Save one entry per selected date.
+- Track mood and a short reflection note.
+- View and delete recent entries.
 
-**数据结构**:
-```typescript
-interface DiaryEntry {
-  id: string;
-  date: string; // YYYY-MM-DD
-  mood: string; // 内置5种或自定义
-  note: string;
-  createdAt: number;
-  updatedAt: number;
-}
-```
+### 3.3 Chat
 
----
+- Capture user prompts and response history.
+- Generate supportive guidance using local profile and journal context.
+- Clear full history on demand.
 
-### 3.2 AI聊天
+### 3.4 Draw
 
-**页面布局**:
-- 左侧：知识库管理（手动输入 + 文件上传）
-- 右侧：对话界面
+- Draw with color and line-width controls.
+- Save canvas snapshots.
+- Manage a local gallery of saved artworks.
 
-**知识库功能**:
-- 手动输入：标题 + 内容，保存到IndexedDB
-- 文件上传：支持 .txt, .md, .pdf
-- 文档列表：显示已添加的文档，可删除
-- 检索方式：TF-IDF向量相似度匹配
+### 3.5 Profile
 
-**对话功能**:
-- 输入框 + 发送按钮
-- 显示对话历史
-- 基于本地知识库回答，如无匹配则回复"知识库中没有相关信息"
-- 清空对话按钮
+- Maintain identity and preference fields.
+- Autosave all profile inputs.
 
-**数据结构**:
-```typescript
-interface KnowledgeItem {
-  id: string;
-  title: string;
-  content: string;
-  source: 'manual' | 'file';
-  fileName?: string;
-  createdAt: number;
-}
-```
+## 4. Non-Functional Constraints
 
----
+- Local interactions should remain responsive (<100ms average writes).
+- No external data transmission in current version.
+- Clear file-level ownership for easier extension.
 
-### 3.3 绘画板
+## 5. Future Extensions
 
-**页面布局**:
-- 顶部：工具栏（画笔颜色、粗细、橡皮擦、清空、保存）
-- 中间：Canvas画布
-- 底部：已保存作品画廊
-
-**功能**:
-- 画笔颜色：预设12色 + 自定义取色器
-- 画笔粗细：1-50px滑块
-- 橡皮擦：擦除画布内容
-- 清空：清空整个画布
-- 保存：保存为PNG到IndexedDB
-- 画廊：显示已保存作品，点击可查看/删除
-
-**数据结构**:
-```typescript
-interface Artwork {
-  id: string;
-  imageData: string; // base64
-  createdAt: number;
-}
-```
-
----
-
-### 3.4 个人资料
-
-**页面布局**: 表单形式
-
-**字段**:
-- 昵称（必填，最大20字）
-- 生日（日期选择器）
-- 性别（单选：男/女/保密）
-- 签名（可选，最大100字）
-- 头像（可选，点击上传图片）
-
-**功能**:
-- 自动保存（输入后1秒无操作自动保存）
-- 头像预览 + 上传
-
----
-
-## 4. 页面路由
-
-| 路径 | 页面 | 描述 |
-|------|------|------|
-| `/` | 日历首页 | 月历打卡 |
-| `/chat` | AI聊天 | 知识库+对话 |
-| `/draw` | 绘画板 | 自由绘画 |
-| `/profile` | 个人资料 | 资料编辑 |
-
----
-
-## 5. 验收标准
-
-- [ ] 首页月历正常显示，点击日期可打卡
-- [ ] 心情选择5种+自定义，备注正常保存
-- [ ] 打卡记录在月历上有对应颜色标记
-- [ ] 知识库可手动添加、文件上传
-- [ ] AI对话能基于知识库回答
-- [ ] 绘画板画笔颜色、粗细可调
-- [ ] 绘画作品可保存到画廊
-- [ ] 个人资料表单正常填写和保存
-- [ ] 所有数据持久化到IndexedDB
-- [ ] 页面响应式，支持移动端
-
----
-
-## 6. 非功能需求
-
-- 首屏加载 < 2s
-- IndexedDB操作 < 100ms
-- 界面简洁温暖，主色调柔和
-- 移动端适配
+- Encrypted local vault mode.
+- Optional cloud sync adapter.
+- Pluggable LLM backend for chat engine.

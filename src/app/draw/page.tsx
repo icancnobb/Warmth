@@ -1,14 +1,13 @@
-import DrawingBoard from '@/components/DrawingBoard'
-
-export const metadata = {
-  title: '绘画板 - 心情日记',
-  description: '自由创作的绘画板',
-}
+﻿import AppShell from '@/components/app-shell'
+import DrawingBoard from '@/features/draw/drawing-board'
 
 export default function DrawPage() {
   return (
-    <main className="min-h-screen">
+    <AppShell
+      title="Canvas"
+      subtitle="Release emotion with simple sketching tools and save snapshots."
+    >
       <DrawingBoard />
-    </main>
+    </AppShell>
   )
 }

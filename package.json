@@ -1,7 +1,8 @@
 {
-  "name": "mood-diary",
-  "version": "1.0.0",
-  "description": "心情日记 - 个人情感助手 Web 应用",
+  "name": "warmth-v2",
+  "version": "2.0.0",
+  "description": "Warmth v2 rebuilt from scratch with modular local-first architecture.",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,36 +13,25 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.2.1",
-    "@types/node": "^25.3.3",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@types/uuid": "^10.0.0",
-    "autoprefixer": "^10.4.27",
-    "dexie": "^4.3.0",
-    "eslint": "^9.39.3",
-    "eslint-config-next": "^16.1.6",
-    "fabric": "^7.2.0",
     "next": "^14.2.35",
-    "pdf-parse": "^2.4.5",
-    "postcss": "^8.5.6",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "recharts": "^3.8.1",
-    "tailwindcss": "^4.2.1",
-    "typescript": "^5.9.3",
-    "uuid": "^13.0.0"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@eslint/js": "^9.39.4",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
+    "@types/node": "^25.3.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^9.39.3",
+    "eslint-config-next": "^16.1.6",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.26",
     "globals": "^15.15.0",
     "jsdom": "^29.0.1",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.58.0",
     "vitest": "^4.1.2"
   }

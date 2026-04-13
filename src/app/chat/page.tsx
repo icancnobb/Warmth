@@ -1,14 +1,13 @@
-import ChatInterface from '@/components/ChatInterface'
-
-export const metadata = {
-  title: 'AI聊天 - 心情日记',
-  description: '基于本地知识库的AI聊天助手',
-}
+﻿import AppShell from '@/components/app-shell'
+import ChatPanel from '@/features/chat/chat-panel'
 
 export default function ChatPage() {
   return (
-    <main className="min-h-screen">
-      <ChatInterface />
-    </main>
+    <AppShell
+      title="Conversation"
+      subtitle="Talk with Warmth using your journal and profile context."
+    >
+      <ChatPanel />
+    </AppShell>
   )
 }

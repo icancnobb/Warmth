@@ -1,14 +1,13 @@
-import ProfileForm from '@/components/ProfileForm'
-
-export const metadata = {
-  title: '个人资料 - 心情日记',
-  description: '管理个人资料',
-}
+﻿import AppShell from '@/components/app-shell'
+import ProfileForm from '@/features/profile/profile-form'
 
 export default function ProfilePage() {
   return (
-    <main className="min-h-screen">
+    <AppShell
+      title="Profile"
+      subtitle="Save your personal baseline so Warmth can respond with context."
+    >
       <ProfileForm />
-    </main>
+    </AppShell>
   )
 }

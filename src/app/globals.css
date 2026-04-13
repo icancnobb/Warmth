@@ -1,356 +1,232 @@
-@import "tailwindcss";
-
-* {
-  -webkit-tap-highlight-color: transparent;
+﻿:root {
+  --bg: #f8f5f1;
+  --surface: #ffffff;
+  --text: #2c2b2a;
+  --muted: #676461;
+  --brand: #d6745f;
+  --brand-soft: #f4d7cf;
+  --line: #e5ddd6;
+  --ok: #6f8e64;
+  --warn: #cc8f4a;
+  --radius: 14px;
+  --shadow: 0 12px 36px rgba(70, 57, 48, 0.08);
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html,
 body {
-  font-family: system-ui, -apple-system, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  background: #FFF9F3;
-  color: #5D4E47;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: radial-gradient(circle at top, #fdf8f4 0%, var(--bg) 45%, #f4efe9 100%);
+  color: var(--text);
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* 全局过渡动画 */
-* {
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 0.2s;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-/* 按钮点击反馈 */
-button:active {
-  transform: scale(0.95);
-  transition: transform 0.1s ease;
+.app-shell {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
 }
 
-/* 按钮悬停效果 */
-.btn-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.btn-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 138, 122, 0.25);
+.shell-header {
+  margin-bottom: 20px;
 }
 
-/* 输入框聚焦 */
-input:focus,
-textarea:focus {
-  outline: none;
+.shell-title {
+  margin: 0;
+  font-size: 2rem;
 }
 
-/* 滚动条样式 */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #E8D4C8;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #D4C4B8;
+.shell-subtitle {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
-/* 颜色系统 */
-:root {
-  --coral: #FF8A7A;
-  --coral-soft: #FFB5A8;
-  --coral-light: #FFD4C8;
-  --coral-pale: #FFE8E0;
-  --cream: #FFF9F3;
-  --cream-dark: #FFF5F0;
-  --peach: #FFE8E0;
-  --text-primary: #5D4E47;
-  --text-secondary: #8B6B61;
-  --text-muted: #B8A099;
-  --handrawn-border: #E8D4C8;
-  --handrawn-light: #F5EBE6;
-  --success: #8BC49E;
-  --warning: #FFD699;
-  --error: #F5A8A8;
+.nav-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
-/* 深色模式 */
-.dark {
-  --coral: #FF9A8B;
-  --coral-soft: #FFB8AA;
-  --coral-light: #FFD8CC;
-  --coral-pale: #3a2a25;
-  --cream: #1a1a1e;
-  --cream-dark: #141416;
-  --peach: #2a2520;
-  --text-primary: #E8D4C8;
-  --text-secondary: #B8A099;
-  --text-muted: #8B7B72;
-  --handrawn-border: #3a3530;
-  --handrawn-light: #2a2520;
-  --success: #8BC49E;
-  --warning: #FFD699;
-  --error: #F5A8A8;
+.nav-link {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--muted);
+  font-weight: 600;
+  transition: all 180ms ease;
 }
 
-.dark body {
-  background: #1a1a1e;
-  color: #E8D4C8;
+.nav-link:hover {
+  border-color: var(--brand);
+  color: var(--brand);
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: #3a3530;
+.nav-link-active {
+  border-color: var(--brand);
+  color: #fff;
+  background: var(--brand);
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #4a4540;
+.card {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
 }
 
-/* 背景 */
-.handrawn-bg {
-  background-color: #FFF9F3;
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(255, 181, 168, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 209, 102, 0.08) 0%, transparent 50%);
+.card h2,
+.card h3 {
+  margin-top: 0;
 }
 
-/* ============================================
-   动画关键帧
-   ============================================ */
-
-/* 弹入动画 - 底部滑入 */
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.grid {
+  display: grid;
+  gap: 14px;
 }
 
-/* 淡入动画 */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
-/* 缩放淡入 */
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* 弹跳效果 */
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
+.inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-/* 脉冲效果 */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.6;
-  }
+input,
+select,
+textarea,
+button {
+  font: inherit;
 }
 
-/* 摇晃效果 */
-@keyframes wiggle {
-  0%, 100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-3deg);
-  }
-  75% {
-    transform: rotate(3deg);
-  }
-}
-
-/* 卡片出现动画 */
-@keyframes cardIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* 涟漪效果 */
-@keyframes ripple {
-  0% {
-    transform: scale(0);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(4);
-    opacity: 0;
-  }
-}
-
-/* 渐变流动 */
-@keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* 动画类 */
-.animate-slide-up {
-  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s ease forwards;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-bounce {
-  animation: bounce 0.6s ease-in-out infinite;
-}
-
-.animate-pulse {
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.animate-wiggle {
-  animation: wiggle 0.5s ease-in-out;
-}
-
-.animate-card-in {
-  animation: cardIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradientFlow 3s ease infinite;
-}
-
-/* 延迟动画 - 用于交错效果 */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
-
-/* 涟漪按钮 */
-.ripple {
-  position: relative;
-  overflow: hidden;
-}
-.ripple::after {
-  content: '';
-  position: absolute;
+input,
+select,
+textarea {
   width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  background-image: radial-gradient(circle, var(--coral) 10%, transparent 10%);
-  background-repeat: no-repeat;
-  background-position: 50%;
-  transform: scale(10);
-  opacity: 0;
-  transition: transform 0.5s, opacity 0.8s;
-}
-.ripple:active::after {
-  transform: scale(0);
-  opacity: 0.3;
-  transition: 0s;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  color: var(--text);
 }
 
-/* 卡片悬停效果 */
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(255, 138, 122, 0.15);
+textarea {
+  resize: vertical;
 }
 
-/* 加载动画 */
-.loading-dots span {
-  animation: pulse 1.4s ease-in-out infinite;
-}
-.loading-dots span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.loading-dots span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-/* 心情选择动画 */
-.mood-btn {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.mood-btn:hover {
-  transform: scale(1.08);
-}
-.mood-btn.selected {
-  transform: scale(1.1);
-  box-shadow: 0 8px 25px rgba(255, 138, 122, 0.3);
+button {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: var(--brand);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-/* 导航项过渡 */
-.nav-item {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.nav-item:hover {
-  transform: translateY(-2px);
+button.secondary {
+  border-color: var(--line);
+  background: #fff;
+  color: var(--text);
 }
 
-/* 输入框动效 */
-.input-focus {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.input-focus:focus {
-  border-color: var(--coral-soft) !important;
-  box-shadow: 0 0 0 4px rgba(255, 138, 122, 0.12) !important;
-  transform: scale(1.01);
+button.ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
 }
 
-/* 弹窗遮罩 */
-.modal-overlay {
-  animation: fadeIn 0.3s ease forwards;
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-/* 弹窗内容 */
-.modal-content {
-  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: #5f3328;
+  font-size: 0.84rem;
 }
 
-/* 列表项交错动画 */
-.list-item {
-  opacity: 0;
-  animation: cardIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.stat:last-child {
+  border-bottom: 0;
+}
+
+.stat-value {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.note-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.canvas {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px dashed #ccb7aa;
+  touch-action: none;
+  background: #fff;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.gallery-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.gallery-item img {
+  width: 100%;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .shell-title {
+    font-size: 1.7rem;
+  }
 }

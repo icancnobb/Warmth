@@ -1,22 +1,10 @@
-import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+﻿import type { Metadata } from 'next'
 import './globals.css'
-import Providers from './providers'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '心情日记 - MoodDiary',
-  description: '个人情感助手 Web 应用 - 日历打卡 + AI聊天 + 绘画板',
+  title: 'Warmth',
+  description: 'Warmth is a calm personal companion for journaling, reflection, and creative release.',
   manifest: '/manifest.json',
-}
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-  themeColor: '#FF6B8A',
 }
 
 export default function RootLayout({
@@ -25,12 +13,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN">
-      <body className={`${inter.className} antialiased`}>
-        <Providers>
-          {children}
-        </Providers>
-      </body>
+    <html lang="en">
+      <body>{children}</body>
     </html>
   )
 }
